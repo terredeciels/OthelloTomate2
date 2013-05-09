@@ -10,11 +10,42 @@ public class Othellier {
     public static int maxY = 8;
     public static Curseur curseur;
     private static Case Origine;
-    private static ArrayList<byte[][]>[][] TBitboard;
+    private ArrayList<byte[][]>[][] TBitboard;
+    public ArrayList[][] BITBOARDS;
     private Case point_depart;
     private int comptage;
 
-    public void creerBitboard() throws CloneNotSupportedException {
+    public ArrayList[][] TBitboardToLongHexa() {
+        ArrayList res[][] = new ArrayList[9][9];
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                res[i][j] = new ArrayList<>();
+            }
+        }
+        String longhexa = "";
+
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ArrayList<byte[][]> LB = TBitboard[i][j];
+
+                for (int d = 0; d < LB.size(); d++) {
+                    for (int k = 1; k <= 8; k++) {
+                        for (int l = 1; l <= 8; l++) {
+                            longhexa += Byte.toString(LB.get(d)[k][l]);
+                        }
+
+                    }
+                    res[i][j].add(longhexa);
+                   
+                    longhexa = "";
+                }
+            }
+        }
+        return res;
+
+    }
+
+    public void creerBitboards() throws CloneNotSupportedException {
         TBitboard = new ArrayList[9][9];
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
@@ -22,6 +53,8 @@ public class Othellier {
                 initialiser();
             }
         }
+//        System.out.println(comptage++);
+        BITBOARDS = TBitboardToLongHexa();
     }
 
     public void initialiser() throws CloneNotSupportedException {
@@ -46,13 +79,13 @@ public class Othellier {
             curseur._case = point_depart.copy();
         }
         TBitboard[point_depart.X][point_depart.Y] = caseBitboards;
-        System.out.println(this.toString());
+//        System.out.println(this.toString());
     }
 
     @Override
     public String toString() {
         String res = "";
-        comptage = 0;
+
         ArrayList<byte[][]> LB = TBitboard[point_depart.X][point_depart.Y];
 //        System.out.println(LB.size());
         for (int d = 0; d < LB.size(); d++) {
@@ -63,7 +96,7 @@ public class Othellier {
                 res += '\n';
             }
 
-            System.out.println(comptage++);
+            comptage++;
             res += '\n';
         }
 
